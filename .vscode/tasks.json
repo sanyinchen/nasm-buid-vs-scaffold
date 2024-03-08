@@ -1,0 +1,59 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Assemble with NASM",
+            "type": "shell",
+            "command": "nasm",
+            "args": [
+                "-f",
+                "elf",
+                "${file}"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
+            "label": "Link with LD",
+            "type": "shell",
+            "command": "ld",
+            "args": [
+                "-m",
+                "elf_i386",
+                "-s",
+                "-o",
+                "${fileBasenameNoExtension}",
+                "${fileBasenameNoExtension}.o"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
+            "label": "Assemble and Link",
+            "dependsOn": [
+                "Assemble with NASM",
+                "Link with LD"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
+            "label": "Exec",
+            "type": "shell",
+            "dependsOn": [
+                "Assemble and Link"
+            ],
+            "command": "./${fileBasenameNoExtension}&&echo '\n'",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}
